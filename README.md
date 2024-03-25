@@ -204,3 +204,19 @@ DAU: [50 миллионов](https://www.usesignhouse.com/blog/reddit-stats#redd
 Поскольку на голоса приходится основная доля запросов, запросы будут обрабатываться пачками через RabbitMQ.
 
 Отказоустойчивость - на основе таймаутов и попыток.
+
+# 5. Логическая схема БД
+
+# 6. Физическая схема БД
+
+![Схема БД](img/database.png)
+
+Таблица | СУБД | Индекс | Шардинг
+------------ | ------------- | ------------- | -------------
+Post | PostgreSQL | `id`, `title`, `author_id` | Range-based (на PostVotes)
+User | PostgreSQL | `username`
+Subreddit | PostgreSQL | `name`
+Comment | PostgreSQL | `author_id`, `parent_id` (в промежуточной `*..*` таблице) | Range-based (на CommentVotes)
+PostVotes | PostgreSQL, аггрегация через RabbitMQ | `post_id`
+CommentVotes | PostgreSQL, аггрегация через RabbitMQ | `comment_id`
+
